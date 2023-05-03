@@ -3,19 +3,19 @@ package com.movcat.movcatalog.models;
 import java.util.List;
 
 public class Game {
-	private List<String> images;
-	private List<GameComment> gameComments;
-	private List<String> developers;
+	private String id;
+	private String name;
 	private String icon;
 	private String banner;
+	private List<String> images;
+	private float price;
+	private List<String> developers;
+	private List<String> publishers;
+	private List<String> genres;
+	private List<String> consoles;
 	private Date releaseDate;
 	private Date postDate;
-	private float price;
-	private List<String> genres;
-	private String name;
-	private List<String> publishers;
-	private List<String> consoles;
-	private String id;
+	private List<GameComment> gameComments;
 
 	public void setImages(List<String> images){
 		this.images = images;

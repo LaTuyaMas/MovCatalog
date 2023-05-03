@@ -5,6 +5,15 @@ public class Date{
 	private int year;
 	private int day;
 
+	public Date() {
+	}
+
+	public Date(int day, int month, int year) {
+		this.month = month;
+		this.year = year;
+		this.day = day;
+	}
+
 	public void setMonth(int month){
 		this.month = month;
 	}
