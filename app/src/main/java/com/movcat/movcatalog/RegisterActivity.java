@@ -14,10 +14,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.movcat.movcatalog.databinding.ActivityLoginBinding;
+import com.movcat.movcatalog.databinding.ActivityRegisterBinding;
 
-public class LoginActivity extends AppCompatActivity {
-    private ActivityLoginBinding binding;
+public class RegisterActivity extends AppCompatActivity {
+
+    private ActivityRegisterBinding binding;
     private FirebaseAuth auth;
     private FirebaseUser user;
 
@@ -25,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         auth = FirebaseAuth.getInstance();
@@ -33,22 +34,22 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = binding.txtEmailLogin.getText().toString();
-                String password = binding.txtPasswordLogin.getText().toString();
+                String email = binding.txtEmailRegister.getText().toString();
+                String password = binding.txtPasswordRegister.getText().toString();
 
                 if (!email.isEmpty() && password.length() > 5){
-                    doLogin(email, password);
+                    doRegister(email, password);
                 }
                 else {
-                    Toast.makeText(LoginActivity.this, "Revisa los datos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Revisa los datos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void doLogin(String email, String password) {
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+    private void doRegister(String email, String password) {
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
@@ -57,10 +58,10 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .addOnFailureListener(LoginActivity.this, new OnFailureListener() {
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LoginActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "No se ha podido registrar el usuario", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI (FirebaseUser user) {
         if (user != null){
             String uid = user.getUid();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("UID", uid);
             startActivity(intent);

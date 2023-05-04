@@ -5,27 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    tools:context=".LoginActivity">
+    tools:context=".RegisterActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imgRegister"
         android:layout_width="378dp"
         android:layout_height="246dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.032"
-        app:srcCompat="@drawable/login_icon2" />
+        app:srcCompat="@drawable/register_icon" />
 
     <EditText
-        android:id="@+id/txtPasswordLogin"
+        android:id="@+id/txtNicknameRegister"
         android:layout_width="344dp"
         android:layout_height="53dp"
         android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
+        android:hint="Nickname"
+        android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
         android:textColorHighlight="#FFFFFF"
         android:textColorHint="#FFFFFF"
@@ -33,15 +33,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.462"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmailLogin"
-        app:layout_constraintVertical_bias="0.067" />
+        app:layout_constraintTop_toBottomOf="@+id/imgRegister"
+        app:layout_constraintVertical_bias="0.097" />
 
     <EditText
-        android:id="@+id/txtEmailLogin"
+        android:id="@+id/txtEmailRegister"
         android:layout_width="344dp"
         android:layout_height="53dp"
+        android:layout_marginBottom="284dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -52,17 +52,37 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.462"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.076" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNicknameRegister"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/txtPasswordRegister"
+        android:layout_width="344dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="172dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailRegister"
+        app:layout_constraintVertical_bias="0.711" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLoginLogin"
         android:layout_width="243dp"
         android:layout_height="72dp"
         android:background="@drawable/round_button"
-        android:text="login"
+        android:text="register"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -70,24 +90,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPasswordLogin"
-        app:layout_constraintVertical_bias="0.154" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRegisterLogin"
-        android:layout_width="190dp"
-        android:layout_height="44dp"
-        android:background="@drawable/rounder_button"
-        android:backgroundTint="#003C73"
-        android:text="no account?"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLoginLogin"
-        app:layout_constraintVertical_bias="0.333" />
-
+        app:layout_constraintTop_toBottomOf="@+id/txtPasswordRegister"
+        app:layout_constraintVertical_bias="0.264" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
