@@ -5,8 +5,20 @@ public class GameComment {
 	private int score;
 	private String userName;
 	private String comment;
-	private String id;
+	private String gameId;
 	private String userUid;
+
+	public GameComment() {
+	}
+
+	public GameComment(Date date, int score, String userName, String comment, String id, String userUid) {
+		this.date = date;
+		this.score = score;
+		this.userName = userName;
+		this.comment = comment;
+		this.gameId = id;
+		this.userUid = userUid;
+	}
 
 	public void setDate(Date date){
 		this.date = date;
@@ -40,12 +52,12 @@ public class GameComment {
 		return comment;
 	}
 
-	public void setId(String id){
-		this.id = id;
+	public void setGameId(String gameId){
+		this.gameId = gameId;
 	}
 
-	public String getId(){
-		return id;
+	public String getGameId(){
+		return gameId;
 	}
 
 	public void setUserUid(String userUid){
@@ -64,7 +76,7 @@ public class GameComment {
 			",score = '" + score + '\'' + 
 			",user_name = '" + userName + '\'' + 
 			",comment = '" + comment + '\'' + 
-			",_id = '" + id + '\'' + 
+			",_id = '" + gameId + '\'' +
 			",user_uid = '" + userUid + '\'' + 
 			"}";
 		}

@@ -52,12 +52,8 @@ public class Game {
 		return banner;
 	}
 
-	public void setReleaseDate(Date releaseDate){
-		this.releaseDate = releaseDate;
-	}
-	public Date getReleaseDate(){
-		return releaseDate;
-	}
+	public void setReleaseDate(Date releaseDate) {this.releaseDate = releaseDate;}
+	public Date getReleaseDate() {return releaseDate;}
 
 	public void setPostDate(Date postDate){
 		this.postDate = postDate;

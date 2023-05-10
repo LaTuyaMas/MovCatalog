@@ -1,10 +1,21 @@
 package com.movcat.movcatalog;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,16 +26,19 @@ import com.movcat.movcatalog.adapters.HomeAdapter;
 import com.movcat.movcatalog.databinding.ActivityMainBinding;
 import com.movcat.movcatalog.models.Date;
 import com.movcat.movcatalog.models.Game;
-import com.movcat.movcatalog.models.ResponseGames;
+import com.movcat.movcatalog.models.GameComment;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-
-    private ResponseGames responseGamesResponse;
     private ArrayList<Game> gamesList;
-    private HomeAdapter homeAdapter;
-    private RecyclerView.LayoutManager lm;
+    private ArrayList<Game> backupList;
+    private ArrayList<Game> recentList;
+    private HomeAdapter gamesAdapter;
+    private HomeAdapter recentAdapter;
+    private RecyclerView.LayoutManager gamesLM;
+    private RecyclerView.LayoutManager recentLM;
     private FirebaseDatabase database;
     private DatabaseReference refGames;
 
@@ -34,26 +48,45 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-//        setSupportActionBar(binding.toolbar);
-
-        gamesList = new ArrayList<>();
+        setSupportActionBar(binding.toolbar);
 
         database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
         refGames = database.getReference("games");
 
-        homeAdapter = new HomeAdapter(gamesList, R.layout.game_view_holder, this);
-        lm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        gamesList = new ArrayList<>();
+        backupList = new ArrayList<>();
+        gamesAdapter = new HomeAdapter(gamesList, R.layout.game_view_holder, this);
+        int columnas;
+        columnas = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
+        gamesLM = new GridLayoutManager(MainActivity.this, columnas);
+        binding.contentMain.allContainer.setAdapter(gamesAdapter);
+        binding.contentMain.allContainer.setLayoutManager(gamesLM);
 
+        recentList = new ArrayList<>();
+        recentAdapter = new HomeAdapter(recentList, R.layout.game_view_holder, this);
+        recentLM = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.contentMain.recentContainer.setAdapter(recentAdapter);
+        binding.contentMain.recentContainer.setLayoutManager(recentLM);
+
+        prepareFirebaseListener();
+    }
+
+    private void prepareFirebaseListener(){
         refGames.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 gamesList.clear();
+                recentList.clear();
                 if (snapshot.exists()) {
                     GenericTypeIndicator<ArrayList<Game>> gti = new GenericTypeIndicator<ArrayList<Game>>() {};
                     ArrayList<Game> temp = snapshot.getValue(gti);
+                    assert temp != null;
                     gamesList.addAll(temp);
+                    recentList.addAll(sortByMostRecent(temp));
                 }
-                homeAdapter.notifyDataSetChanged();
+                gamesAdapter.notifyDataSetChanged();
+                recentAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -61,83 +94,248 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        binding.contentMain.contenedor.setAdapter(homeAdapter);
-        binding.contentMain.contenedor.setLayoutManager(lm);
+    private ArrayList<Game> sortByMostRecent(ArrayList<Game> gamesList){
+        ArrayList<Game> newList = new ArrayList<>();
+        Game recent = gamesList.get(0);
 
-        //testGame();
+        for (int i = 0; i < 10; i++) {
+            if (gamesList.size() != 0) {
+                for (Game g : gamesList) {
+                    if (g.getReleaseDate().getYear() >= recent.getReleaseDate().getYear()){
+                        if (g.getReleaseDate().getMonth() >= recent.getReleaseDate().getMonth()){
+                            if (g.getReleaseDate().getDay() >= recent.getReleaseDate().getDay()){
+                                recent = g;
+                            }
+                        }
+                    }
+                }
+                newList.add(recent);
+                gamesList.remove(recent);
+                recent.setReleaseDate(new Date(0, 0, 0));
+            }
+            else {
+                return newList;
+            }
+        }
+
+        return newList;
     }
 
     private void testGame() {
         Game game = new Game();
-        game.setId("10400305CD");
-        game.setName("Test1");
-        game.setIcon("http://cdn.onlinewebfonts.com/svg/img_558941.png");
-        game.setBanner("https://upload.wikimedia.org/wikipedia/commons/f/f1/CheckersStandard.jpg");
+        game.setId("14467805GH");
+        game.setName("Spelunky 2");
+        game.setIcon("https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/ba2fd310dcaa8781a9a652a31baf3c68.ico");
+        game.setBanner("https://cdn.fanbyte.com/wp-content/uploads/2020/09/Spelunky-2-Key-Art.jpg?x25640");
         ArrayList<String> images = new ArrayList<>();
-        images.add("https://t4.ftcdn.net/jpg/02/49/92/03/360_F_249920336_OAL1B6J8UvQGKIjZnThWrOLHRPUDG0pV.jpg");
-        images.add("https://i.ebayimg.com/images/g/QFwAAOSwjARcZzM0/s-l500.jpg");
-        images.add("http://atlas-content-cdn.pixelsquid.com/stock-images/checkers-pieces-red-D5QNmq3-600.jpg");
+        images.add("https://cdn.cloudflare.steamstatic.com/steam/apps/418530/ss_69755bc2679253aa132928f261bdd059f215d342.1920x1080.jpg?t=1663719294");
+        images.add("https://cdn.vox-cdn.com/thumbor/9XKj80fncbd2OFrdjN5P5EPLwDU=/0x0:2560x1440/1200x675/filters:focal(1076x516:1484x924)/cdn.vox-cdn.com/uploads/chorus_image/image/67401958/20200911130108_1.0.jpg");
+        images.add("https://s3.amazonaws.com/prod-media.gameinformer.com/styles/full/s3/2020/09/11/2945e4c8/s2-3.jpg");
         game.setImages(images);
         game.setPrice((float) 19.99);
         ArrayList<String> dev = new ArrayList<>();
-        dev.add("china probably");
+        dev.add("Mossmouth");
+        dev.add("BlitWorks");
         game.setDevelopers(dev);
         ArrayList<String> pub = new ArrayList<>();
-        pub.add("everyone");
+        pub.add("Mossmouth");
         game.setPublishers(pub);
         ArrayList<String> gen = new ArrayList<>();
-        gen.add("Strategy");
-        gen.add("Puzzle");
+        gen.add("Platformer");
+        gen.add("Rogue-Like");
+        gen.add("Adventure");
+        gen.add("Multiplayer");
         game.setGenres(gen);
         ArrayList<String> con = new ArrayList<>();
-        con.add("Home");
-        con.add("Table");
+        con.add("PC");
+        con.add("Nintendo Switch");
+        con.add("Xbox");
+        con.add("PS4");
         game.setConsoles(con);
-        Date release = new Date(0,0,0);
+        Date release = new Date(15,9,2020);
         game.setReleaseDate(release);
         Date post = new Date(5,4,2023);
+        game.setPostDate(post);
+        ArrayList<GameComment> comments = new ArrayList<>();
+        comments.add(new GameComment(
+                post,
+                9,
+                "pepo",
+                "good game",
+                "14467805GH",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game.setComments(comments);
         gamesList.add(0, game);
+
+        Game game2 = new Game();
+        game2.setId("94642681OP");
+        game2.setName("Magicka");
+        game2.setIcon("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/46b63d3c-ae67-464c-9a37-670829b2a157/da34sy2-9b0227a9-0947-4f01-ad4e-8dc4382520bb.png/v1/fill/w_512,h_512/magicka___icon_by_blagoicons_da34sy2-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvNDZiNjNkM2MtYWU2Ny00NjRjLTlhMzctNjcwODI5YjJhMTU3XC9kYTM0c3kyLTliMDIyN2E5LTA5NDctNGYwMS1hZDRlLThkYzQzODI1MjBiYi5wbmciLCJ3aWR0aCI6Ijw9NTEyIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0._Jf5o2SZZpHamQXw7i51hIFZGqtr5jn7fcfHzknKco4");
+        game2.setBanner("https://plitchcdn.azureedge.net/covers-en/Magicka_181.png?d=637345932790247458");
+        ArrayList<String> images2 = new ArrayList<>();
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_514e6d7484e979f1879b59b4a1443d52bfde7cb1.1920x1080.jpg?t=1615973729");
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_e1d4017ccb5a3387b76807298dad84c719614765.1920x1080.jpg?t=1615973729");
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_a9250193739e4e8a4baeef3169cc416a975ae38c.1920x1080.jpg?t=1615973729");
+        game2.setImages(images2);
+        game2.setPrice((float) 9.99);
+        ArrayList<String> dev2 = new ArrayList<>();
+        dev2.add("Arrowhead Game Studios");
+        game2.setDevelopers(dev2);
+        ArrayList<String> pub2 = new ArrayList<>();
+        pub2.add("Paradox Interactive");
+        game2.setPublishers(pub2);
+        ArrayList<String> gen2 = new ArrayList<>();
+        gen2.add("Fantasy");
+        gen2.add("Roleplay");
+        gen2.add("Adventure");
+        gen2.add("Multiplayer");
+        game2.setGenres(gen2);
+        ArrayList<String> con2 = new ArrayList<>();
+        con2.add("PC");
+        con2.add("Xbox");
+        game2.setConsoles(con2);
+        Date release2 = new Date(25,1,2011);
+        game2.setReleaseDate(release2);
+        Date post2 = new Date(5,4,2023);
+        game2.setPostDate(post2);
+        ArrayList<GameComment> comments2 = new ArrayList<>();
+        comments2.add(new GameComment(
+                post,
+                9,
+                "pepo",
+                "good game",
+                "94642681OP",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game2.setComments(comments2);
+        gamesList.add(0, game2);
+
+        Game game3 = new Game();
+        game3.setId("12345678YU");
+        game3.setName("Terraria");
+        game3.setIcon("https://play-lh.googleusercontent.com/BoAvMI_6JGNRBp_3gFaVuLuqW_4J-rjtbR_giKFoJRvZmDiPtDlnLMur9cT7sTTfeos=w240-h480-rw");
+        game3.setBanner("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/H2x1_NSwitchDS_Terraria.jpg");
+        ArrayList<String> images3 = new ArrayList<>();
+        images3.add("https://web54.pro/wp-content/uploads/2022/12/Obnovlenie-Terraria-145-priostanovleno-tak-kak-razrabotchiki-vzyali-mesyachnyj-pereryv.jpg");
+        images3.add("https://cdn.mos.cms.futurecdn.net/ftCURjzcqaaxNdsfUVLiDj.jpg");
+        images3.add("https://techraptor.net/sites/default/files/styles/image_header/public/2022-04/Terraria%201.4.3%20Update%20Console%20Mobile%20cover.jpg?itok=rMX8KENh");
+        game3.setImages(images3);
+        game3.setPrice((float) 9.99);
+        ArrayList<String> dev3 = new ArrayList<>();
+        dev3.add("Re-Logic");
+        game3.setDevelopers(dev3);
+        ArrayList<String> pub3 = new ArrayList<>();
+        pub3.add("Re-Logic");
+        game3.setPublishers(pub3);
+        ArrayList<String> gen3 = new ArrayList<>();
+        gen3.add("Survival");
+        gen3.add("Sandbox");
+        gen3.add("Action");
+        gen3.add("Exploration");
+        gen3.add("Multiplayer");
+        game3.setGenres(gen3);
+        ArrayList<String> con3 = new ArrayList<>();
+        con3.add("PC");
+        con3.add("Xbox");
+        con3.add("PS4");
+        con3.add("Nintendo Switch");
+        con3.add("Android");
+        con3.add("IOS");
+        con3.add("PSVita");
+        game3.setConsoles(con3);
+        Date release3 = new Date(16,5,2011);
+        game3.setReleaseDate(release3);
+        Date post3 = new Date(5,4,2023);
+        game3.setPostDate(post3);
+        ArrayList<GameComment> comments3 = new ArrayList<>();
+        comments3.add(new GameComment(
+                post,
+                9,
+                "pepo",
+                "good game",
+                "12345678YU",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game3.setComments(comments3);
+        gamesList.add(0, game3);
+
         refGames.setValue(gamesList);
-        /*
-        * {"_id":{"$oid":"642d2aa8fdc4c191a3263952"},
-        * "name":"Test1",
-        * "icon":"http://cdn.onlinewebfonts.com/svg/img_558941.png",
-        * "banner":"https://upload.wikimedia.org/wikipedia/commons/f/f1/CheckersStandard.jpg",
-        * "images":["https://t4.ftcdn.net/jpg/02/49/92/03/360_F_249920336_OAL1B6J8UvQGKIjZnThWrOLHRPUDG0pV.jpg",
-        * "https://i.ebayimg.com/images/g/QFwAAOSwjARcZzM0/s-l500.jpg",
-        * "http://atlas-content-cdn.pixelsquid.com/stock-images/checkers-pieces-red-D5QNmq3-600.jpg"],
-        * "price":{"$numberDouble":"19.99"},
-        * "developers":["china probably"],
-        * "publishers":["everyone"],
-        * "genres":["Strategy","Puzzle"],
-        * "consoles":["Home","Outside","Idk"],
-        * "release_date":{"day":{"$numberInt":"0"},
-        * "month":{"$numberInt":"0"},"year":{"$numberInt":"0"}},
-        * "post_date":{"day":{"$numberInt":"5"},"month":{"$numberInt":"4"},"year":{"$numberInt":"2023"}},
-        * "comments":[{"user_uid":null,"user_name":null,"comment":null,"score":null,"date":{"day":null,"month":null,"year":null},"_id":{"$oid":"642d2aa8fdc4c191a3263953"}}]}
-        * */
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("Type back to return to normal");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (s.equals("back") && backupList.size() != 0){
+                    binding.contentMain.lblRecentHome.setVisibility(View.VISIBLE);
+                    binding.contentMain.recentContainer.setVisibility(View.VISIBLE);
+                    binding.contentMain.lblHighHome.setVisibility(View.VISIBLE);
+                    binding.contentMain.highContainer.setVisibility(View.VISIBLE);
+                    binding.contentMain.lblAllGamesHome.setText("THE ENTIRE LIST");
+
+                    gamesList.clear();
+                    gamesList.addAll(backupList);
+                    backupList.clear();
+                    gamesAdapter.notifyDataSetChanged();
+                }
+                else {
+                    binding.contentMain.lblRecentHome.setVisibility(View.GONE);
+                    binding.contentMain.recentContainer.setVisibility(View.GONE);
+                    binding.contentMain.lblHighHome.setVisibility(View.GONE);
+                    binding.contentMain.highContainer.setVisibility(View.GONE);
+                    binding.contentMain.lblAllGamesHome.setText("SEARCH RESULTS");
+
+                    if (backupList.size() == 0) {
+                        backupList.addAll(gamesList);
+                    }
+                    else {
+                        gamesList.clear();
+                        gamesList.addAll(backupList);
+                    }
+                    ArrayList<Game> filteredGames = new ArrayList<>();
+                    for ( Game g : gamesList ) {
+                        if (g.getName().equalsIgnoreCase(s)) {
+                            filteredGames.add(g);
+                        }
+                    }
+                    gamesList.clear();
+                    gamesList.addAll(filteredGames);
+                    gamesAdapter.notifyDataSetChanged();
+                }
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.logout){
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

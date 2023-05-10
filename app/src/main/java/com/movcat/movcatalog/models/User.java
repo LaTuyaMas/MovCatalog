@@ -5,7 +5,6 @@ import java.util.List;
 public class User {
     private String user_uid;
     private String nickname;
-    private String pfp;
     private List<UserComment> userComments;
 
     public String getUser_uid() {
@@ -22,14 +21,6 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getPfp() {
-        return pfp;
-    }
-
-    public void setPfp(String pfp) {
-        this.pfp = pfp;
     }
 
     public List<UserComment> getUserComments() {

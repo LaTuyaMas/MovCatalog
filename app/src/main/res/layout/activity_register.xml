@@ -41,7 +41,6 @@
         android:id="@+id/txtEmailRegister"
         android:layout_width="344dp"
         android:layout_height="53dp"
-        android:layout_marginBottom="284dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -52,10 +51,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtNicknameRegister"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.581" />
 
     <EditText
         android:id="@+id/txtPasswordRegister"
