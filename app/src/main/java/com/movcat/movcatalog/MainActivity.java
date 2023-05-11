@@ -68,59 +68,8 @@ public class MainActivity extends AppCompatActivity {
         binding.contentMain.recentContainer.setAdapter(recentAdapter);
         binding.contentMain.recentContainer.setLayoutManager(recentLM);
 
-        prepareFirebaseListener();
-    }
-
-    private void prepareFirebaseListener(){
-        refGames.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                gamesList.clear();
-                recentList.clear();
-                if (snapshot.exists()) {
-                    GenericTypeIndicator<ArrayList<Game>> gti = new GenericTypeIndicator<ArrayList<Game>>() {};
-                    ArrayList<Game> temp = snapshot.getValue(gti);
-                    assert temp != null;
-                    gamesList.addAll(temp);
-                    recentList.addAll(sortByMostRecent(temp));
-                }
-                gamesAdapter.notifyDataSetChanged();
-                recentAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private ArrayList<Game> sortByMostRecent(ArrayList<Game> gamesList){
-        ArrayList<Game> newList = new ArrayList<>();
-        Game recent = gamesList.get(0);
-
-        for (int i = 0; i < 10; i++) {
-            if (gamesList.size() != 0) {
-                for (Game g : gamesList) {
-                    if (g.getReleaseDate().getYear() >= recent.getReleaseDate().getYear()){
-                        if (g.getReleaseDate().getMonth() >= recent.getReleaseDate().getMonth()){
-                            if (g.getReleaseDate().getDay() >= recent.getReleaseDate().getDay()){
-                                recent = g;
-                            }
-                        }
-                    }
-                }
-                newList.add(recent);
-                gamesList.remove(recent);
-                recent.setReleaseDate(new Date(0, 0, 0));
-            }
-            else {
-                return newList;
-            }
-        }
-
-        return newList;
+        prepareFirebaseListeners();
+//        testGame3();
     }
 
     private void testGame() {
@@ -264,6 +213,154 @@ public class MainActivity extends AppCompatActivity {
 
         refGames.setValue(gamesList);
     }
+    private void testGame2(){
+        Game game = new Game();
+        game.setName("Spelunky 2");
+        game.setIcon("https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/ba2fd310dcaa8781a9a652a31baf3c68.ico");
+        game.setBanner("https://cdn.fanbyte.com/wp-content/uploads/2020/09/Spelunky-2-Key-Art.jpg?x25640");
+        ArrayList<String> images = new ArrayList<>();
+        images.add("https://cdn.cloudflare.steamstatic.com/steam/apps/418530/ss_69755bc2679253aa132928f261bdd059f215d342.1920x1080.jpg?t=1663719294");
+        images.add("https://cdn.vox-cdn.com/thumbor/9XKj80fncbd2OFrdjN5P5EPLwDU=/0x0:2560x1440/1200x675/filters:focal(1076x516:1484x924)/cdn.vox-cdn.com/uploads/chorus_image/image/67401958/20200911130108_1.0.jpg");
+        images.add("https://s3.amazonaws.com/prod-media.gameinformer.com/styles/full/s3/2020/09/11/2945e4c8/s2-3.jpg");
+        game.setImages(images);
+        game.setPrice((float) 19.99);
+        ArrayList<String> dev = new ArrayList<>();
+        dev.add("Mossmouth");
+        dev.add("BlitWorks");
+        game.setDevelopers(dev);
+        ArrayList<String> pub = new ArrayList<>();
+        pub.add("Mossmouth");
+        game.setPublishers(pub);
+        ArrayList<String> gen = new ArrayList<>();
+        gen.add("Platformer");
+        gen.add("Rogue-Like");
+        gen.add("Adventure");
+        gen.add("Multiplayer");
+        game.setGenres(gen);
+        ArrayList<String> con = new ArrayList<>();
+        con.add("PC");
+        con.add("Nintendo Switch");
+        con.add("Xbox");
+        con.add("PS4");
+        game.setConsoles(con);
+        Date release = new Date(15,9,2020);
+        game.setReleaseDate(release);
+        Date post = new Date(5,4,2023);
+        game.setPostDate(post);
+        ArrayList<GameComment> comments = new ArrayList<>();
+        comments.add(new GameComment(
+                post,
+                9,
+                "pepo",
+                "good game",
+                "",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game.setComments(comments);
+        String gameId = refGames.push().getKey();
+        game.setId(gameId);
+        refGames.child(gameId).setValue(game);
+    }
+    private void testGame3(){
+        Game game2 = new Game();
+        game2.setId("94642681OP");
+        game2.setName("Magicka");
+        game2.setIcon("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/46b63d3c-ae67-464c-9a37-670829b2a157/da34sy2-9b0227a9-0947-4f01-ad4e-8dc4382520bb.png/v1/fill/w_512,h_512/magicka___icon_by_blagoicons_da34sy2-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvNDZiNjNkM2MtYWU2Ny00NjRjLTlhMzctNjcwODI5YjJhMTU3XC9kYTM0c3kyLTliMDIyN2E5LTA5NDctNGYwMS1hZDRlLThkYzQzODI1MjBiYi5wbmciLCJ3aWR0aCI6Ijw9NTEyIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0._Jf5o2SZZpHamQXw7i51hIFZGqtr5jn7fcfHzknKco4");
+        game2.setBanner("https://plitchcdn.azureedge.net/covers-en/Magicka_181.png?d=637345932790247458");
+        ArrayList<String> images2 = new ArrayList<>();
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_514e6d7484e979f1879b59b4a1443d52bfde7cb1.1920x1080.jpg?t=1615973729");
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_e1d4017ccb5a3387b76807298dad84c719614765.1920x1080.jpg?t=1615973729");
+        images2.add("https://cdn.cloudflare.steamstatic.com/steam/apps/42910/ss_a9250193739e4e8a4baeef3169cc416a975ae38c.1920x1080.jpg?t=1615973729");
+        game2.setImages(images2);
+        game2.setPrice((float) 9.99);
+        ArrayList<String> dev2 = new ArrayList<>();
+        dev2.add("Arrowhead Game Studios");
+        game2.setDevelopers(dev2);
+        ArrayList<String> pub2 = new ArrayList<>();
+        pub2.add("Paradox Interactive");
+        game2.setPublishers(pub2);
+        ArrayList<String> gen2 = new ArrayList<>();
+        gen2.add("Fantasy");
+        gen2.add("Roleplay");
+        gen2.add("Adventure");
+        gen2.add("Multiplayer");
+        game2.setGenres(gen2);
+        ArrayList<String> con2 = new ArrayList<>();
+        con2.add("PC");
+        con2.add("Xbox");
+        game2.setConsoles(con2);
+        Date release2 = new Date(25,1,2011);
+        game2.setReleaseDate(release2);
+        Date post2 = new Date(5,4,2023);
+        game2.setPostDate(post2);
+        ArrayList<GameComment> comments2 = new ArrayList<>();
+        comments2.add(new GameComment(
+                post2,
+                9,
+                "pepo",
+                "good game",
+                "94642681OP",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game2.setComments(comments2);
+        gamesList.add(0, game2);
+        String gameId = refGames.push().getKey();
+        game2.setId(gameId);
+        refGames.child(gameId).setValue(game2);
+    }
+
+    private void prepareFirebaseListeners(){
+        refGames.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                gamesList.clear();
+                recentList.clear();
+                if (snapshot.exists()) {
+                    for ( DataSnapshot gameSnapshot : snapshot.getChildren() ) {
+                        Game game = gameSnapshot.getValue(Game.class);
+                        backupList.add(game);
+                    }
+                    gamesList.addAll(backupList);
+                    recentList.addAll(sortByMostRecent(backupList));
+                }
+                gamesAdapter.notifyDataSetChanged();
+                recentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private ArrayList<Game> sortByMostRecent(ArrayList<Game> gamesList){
+        ArrayList<Game> newList = new ArrayList<>();
+        Game recent = gamesList.get(0);
+
+        for (int i = 0; i < 10; i++) {
+            if (gamesList.size() != 0) {
+                for (Game g : gamesList) {
+                    if (g.getReleaseDate().getYear() >= recent.getReleaseDate().getYear()){
+                        if (g.getReleaseDate().getMonth() >= recent.getReleaseDate().getMonth()){
+                            if (g.getReleaseDate().getDay() >= recent.getReleaseDate().getDay()){
+                                recent = g;
+                            }
+                        }
+                    }
+                }
+                newList.add(recent);
+                gamesList.remove(recent);
+                recent.setReleaseDate(new Date(0, 0, 0));
+            }
+            else {
+                return newList;
+            }
+        }
+
+        return newList;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -274,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("Type back to return to normal");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @SuppressLint("SetTextI18n")
+            @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
             public boolean onQueryTextSubmit(String s) {
                 if (s.equals("back") && backupList.size() != 0){

@@ -1,8 +1,9 @@
 package com.movcat.movcatalog.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Game {
+public class Game implements Serializable {
 	private String id;
 	private String name;
 	private String icon;
@@ -16,6 +17,25 @@ public class Game {
 	private Date releaseDate;
 	private Date postDate;
 	private List<GameComment> gameComments;
+
+	public Game() {
+	}
+
+	public Game(String id, String name, String icon, String banner, List<String> images, float price, List<String> developers, List<String> publishers, List<String> genres, List<String> consoles, Date releaseDate, Date postDate, List<GameComment> gameComments) {
+		this.id = id;
+		this.name = name;
+		this.icon = icon;
+		this.banner = banner;
+		this.images = images;
+		this.price = price;
+		this.developers = developers;
+		this.publishers = publishers;
+		this.genres = genres;
+		this.consoles = consoles;
+		this.releaseDate = releaseDate;
+		this.postDate = postDate;
+		this.gameComments = gameComments;
+	}
 
 	public void setImages(List<String> images){
 		this.images = images;
@@ -119,8 +139,8 @@ public class Game {
 			",genres = '" + genres + '\'' + 
 			",name = '" + name + '\'' + 
 			",publishers = '" + publishers + '\'' + 
-			",consoles = '" + consoles + '\'' + 
-			",_id = '" + id + '\'' + 
+			",consoles = '" + consoles + '\'' +
+			",_id = '" + id + '\'' +
 			"}";
 		}
 }

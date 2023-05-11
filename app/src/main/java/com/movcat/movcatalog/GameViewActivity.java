@@ -1,0 +1,40 @@
+package com.movcat.movcatalog;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.movcat.movcatalog.config.Constants;
+import com.movcat.movcatalog.databinding.ActivityGameViewBinding;
+import com.movcat.movcatalog.models.Game;
+import com.squareup.picasso.Picasso;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class GameViewActivity extends AppCompatActivity {
+    private ActivityGameViewBinding binding;
+    private Game viewGame;
+    private FirebaseDatabase database;
+    private DatabaseReference refGames;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = ActivityGameViewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getSerializable(Constants.gameKey) != null) {
+//            viewGame = (Game) getIntent().getExtras().getSerializable(Constants.gameKey);
+            database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
+            refGames = database.getReference("games");
+
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,20 +12,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovCatalog"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".GameViewActivity"
+            android:exported="false"
+            android:label="@string/title_activity_game_view"
+            android:theme="@style/Theme.MovCatalog.NoActionBar" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".TestActivity"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +45,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MovCatalog.NoActionBar">
+            android:theme="@style/Theme.MovCatalog.NoActionBar" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

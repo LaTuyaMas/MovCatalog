@@ -1,6 +1,8 @@
 package com.movcat.movcatalog.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.movcat.movcatalog.GameViewActivity;
 import com.movcat.movcatalog.R;
+import com.movcat.movcatalog.config.Constants;
 import com.movcat.movcatalog.models.Game;
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +44,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.GameVH>{
         holder.lblTitle.setText(game.getName());
 
         Picasso.get()
-                .load(game.getBanner())
+                .load(game.getIcon())
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.imgBanner);
@@ -49,10 +53,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.GameVH>{
             @Override
             public void onClick(View view) {
 //                Bundle bundle = new Bundle();
-//                bundle.putString("ID", String.valueOf(personaje.getId()));
-//                Intent intent = new Intent(context, VerPersonajeActivity.class);
+//                bundle.putString("ID", String.valueOf(game.getId()));
+//                Intent intent = new Intent(context, GameViewActivity.class);
 //                intent.putExtras(bundle);
 //                context.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.gameKey, game);
+                Intent intent = new Intent(context, GameViewActivity.class);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }
