@@ -57,10 +57,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.GameVH>{
 //                Intent intent = new Intent(context, GameViewActivity.class);
 //                intent.putExtras(bundle);
 //                context.startActivity(intent);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.gameKey, game);
                 Intent intent = new Intent(context, GameViewActivity.class);
-                intent.putExtras(bundle);
+                intent.putExtra(Constants.gameKey, game.getId());
                 context.startActivity(intent);
             }
         });

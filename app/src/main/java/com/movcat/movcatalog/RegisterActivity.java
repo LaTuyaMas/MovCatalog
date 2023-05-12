@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.movcat.movcatalog.databinding.ActivityRegisterBinding;
+import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.User;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference refUsers;
+    private DatabaseReference refUser;
 
     private ArrayList<User> userList;
 
@@ -55,9 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
                 if (snapshot.exists()) {
-                    GenericTypeIndicator<ArrayList<User>> gti = new GenericTypeIndicator<ArrayList<User>>() {};
-                    ArrayList<User> temp = snapshot.getValue(gti);
-                    userList.addAll(temp);
+                    for ( DataSnapshot gameSnapshot : snapshot.getChildren() ) {
+                        User user = gameSnapshot.getValue(User.class);
+                        userList.add(user);
+                    }
                 }
             }
 
@@ -67,17 +70,26 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnLoginLogin.setOnClickListener(new View.OnClickListener() {
+        binding.btnRegisterRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean goodRegister = true;
+                String nickname = binding.txtNicknameRegister.getText().toString();
                 String email = binding.txtEmailRegister.getText().toString();
                 String password = binding.txtPasswordRegister.getText().toString();
 
-                if (!email.isEmpty() && password.length() > 5){
+                for ( User u : userList ) {
+                    if (u.getNickname().equals(nickname)){
+                        goodRegister = false;
+                        Toast.makeText(RegisterActivity.this, "That nickname is already used", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                if (!email.isEmpty() && password.length() > 5 && goodRegister){
                     doRegister(email, password);
                 }
                 else {
-                    Toast.makeText(RegisterActivity.this, "Revisa los datos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Please revise email and password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -108,8 +120,9 @@ public class RegisterActivity extends AppCompatActivity {
         User newUser = new User();
         newUser.setUser_uid(user.getUid());
         newUser.setNickname(binding.txtNicknameRegister.getText().toString());
-        userList.add(0, newUser);
-        refUsers.setValue(userList);
+        newUser.setUserComments(null);
+        refUser = database.getReference("users").child(user.getUid());
+        refUser.setValue(newUser);
     }
 
     private void updateUI (FirebaseUser user) {

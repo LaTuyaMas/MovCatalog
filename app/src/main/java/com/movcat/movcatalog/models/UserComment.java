@@ -2,19 +2,19 @@ package com.movcat.movcatalog.models;
 
 public class UserComment {
     private String game_id;
-    private String game_name;
-    private String game_icon;
     private String comment;
     private Date date;
+    private int score;
 
-    public String getGame_uid() {return game_id;}
-    public void setGame_uid(String game_uid) {this.game_id = game_uid;}
+    public UserComment() {
+    }
 
-    public String getGame_name() {return game_name;}
-    public void setGame_name(String game_name) {this.game_name = game_name;}
-
-    public String getGame_icon() {return game_icon;}
-    public void setGame_icon(String game_icon) {this.game_icon = game_icon;}
+    public UserComment(String game_id, String comment, Date date, int score) {
+        this.game_id = game_id;
+        this.comment = comment;
+        this.date = date;
+        this.score = score;
+    }
 
     public String getComment() {return comment;}
     public void setComment(String comment) {this.comment = comment;}
@@ -22,14 +22,19 @@ public class UserComment {
     public Date getDate() {return date;}
     public void setDate(Date date) {this.date = date;}
 
-    @Override
-    public String toString() {
-        return "UserComment{" +
-                "game_uid='" + game_id + '\'' +
-                ", game_name='" + game_name + '\'' +
-                ", game_icon='" + game_icon + '\'' +
-                ", comment='" + comment + '\'' +
-                ", date=" + date +
-                '}';
+    public String getGame_id() {
+        return game_id;
+    }
+
+    public void setGame_id(String game_id) {
+        this.game_id = game_id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

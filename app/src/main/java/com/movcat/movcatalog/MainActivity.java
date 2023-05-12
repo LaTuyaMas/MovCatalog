@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         binding.contentMain.recentContainer.setLayoutManager(recentLM);
 
         prepareFirebaseListeners();
-//        testGame3();
     }
 
     private void testGame() {
@@ -307,6 +306,58 @@ public class MainActivity extends AppCompatActivity {
         String gameId = refGames.push().getKey();
         game2.setId(gameId);
         refGames.child(gameId).setValue(game2);
+    }
+    private void testGame4(){
+        Game game3 = new Game();
+        game3.setName("Terraria");
+        game3.setIcon("https://play-lh.googleusercontent.com/BoAvMI_6JGNRBp_3gFaVuLuqW_4J-rjtbR_giKFoJRvZmDiPtDlnLMur9cT7sTTfeos=w240-h480-rw");
+        game3.setBanner("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/H2x1_NSwitchDS_Terraria.jpg");
+        ArrayList<String> images3 = new ArrayList<>();
+        images3.add("https://web54.pro/wp-content/uploads/2022/12/Obnovlenie-Terraria-145-priostanovleno-tak-kak-razrabotchiki-vzyali-mesyachnyj-pereryv.jpg");
+        images3.add("https://cdn.mos.cms.futurecdn.net/ftCURjzcqaaxNdsfUVLiDj.jpg");
+        images3.add("https://techraptor.net/sites/default/files/styles/image_header/public/2022-04/Terraria%201.4.3%20Update%20Console%20Mobile%20cover.jpg?itok=rMX8KENh");
+        game3.setImages(images3);
+        game3.setPrice((float) 9.99);
+        ArrayList<String> dev3 = new ArrayList<>();
+        dev3.add("Re-Logic");
+        game3.setDevelopers(dev3);
+        ArrayList<String> pub3 = new ArrayList<>();
+        pub3.add("Re-Logic");
+        game3.setPublishers(pub3);
+        ArrayList<String> gen3 = new ArrayList<>();
+        gen3.add("Survival");
+        gen3.add("Sandbox");
+        gen3.add("Action");
+        gen3.add("Exploration");
+        gen3.add("Multiplayer");
+        game3.setGenres(gen3);
+        ArrayList<String> con3 = new ArrayList<>();
+        con3.add("PC");
+        con3.add("Xbox");
+        con3.add("PS4");
+        con3.add("Nintendo Switch");
+        con3.add("Android");
+        con3.add("IOS");
+        con3.add("PSVita");
+        game3.setConsoles(con3);
+        Date release3 = new Date(16,5,2011);
+        game3.setReleaseDate(release3);
+        Date post3 = new Date(5,4,2023);
+        game3.setPostDate(post3);
+        ArrayList<GameComment> comments3 = new ArrayList<>();
+        comments3.add(new GameComment(
+                post3,
+                9,
+                "pepo",
+                "good game",
+                "12345678YU",
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        ));
+        game3.setComments(comments3);
+        gamesList.add(0, game3);
+        String gameId = refGames.push().getKey();
+        game3.setId(gameId);
+        refGames.child(gameId).setValue(game3);
     }
 
     private void prepareFirebaseListeners(){
