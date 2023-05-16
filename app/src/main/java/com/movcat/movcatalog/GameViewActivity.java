@@ -1,11 +1,15 @@
 package com.movcat.movcatalog;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +19,6 @@ import com.movcat.movcatalog.config.Constants;
 import com.movcat.movcatalog.databinding.ActivityGameViewBinding;
 import com.movcat.movcatalog.models.Game;
 import com.squareup.picasso.Picasso;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class GameViewActivity extends AppCompatActivity {
     private ActivityGameViewBinding binding;
@@ -71,5 +69,22 @@ public class GameViewActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.contentGame.imgBannerView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_game, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.back){
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
