@@ -8,51 +8,64 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:id="@+id/lblRecentHome"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1D0043"
-        android:fontFamily="@font/k2d_extrabold"
-        android:text="MOST RECENT REVIEWS"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+        android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/lblHighHome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1D0043"
-        android:fontFamily="@font/k2d_extrabold"
-        android:text="HIGGEST SCORED GAMES"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+            <TextView
+                android:id="@+id/lblRecentHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1D0043"
+                android:fontFamily="@font/k2d_extrabold"
+                android:text="MOST RECENT REVIEWS"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/highContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/lblAllGamesHome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1D0043"
-        android:fontFamily="@font/k2d_extrabold"
-        android:text="THE ENTIRE LIST"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+            <TextView
+                android:id="@+id/lblHighHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1D0043"
+                android:fontFamily="@font/k2d_extrabold"
+                android:text="HIGGEST SCORED GAMES"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/allContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/highContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/lblAllGamesHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1D0043"
+                android:fontFamily="@font/k2d_extrabold"
+                android:text="THE ENTIRE LIST"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/allContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

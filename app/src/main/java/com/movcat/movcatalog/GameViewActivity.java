@@ -1,15 +1,11 @@
 package com.movcat.movcatalog;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,6 +58,7 @@ public class GameViewActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateInfo() {
         binding.contentGame.lblNameView.setText(viewGame.getName());
         Picasso.get()
@@ -69,6 +66,18 @@ public class GameViewActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.contentGame.imgBannerView);
+        binding.contentGame.lblTagsView.setText("");
+        for ( String t : viewGame.getGenres() ) {
+            binding.contentGame.lblTagsView.append(t+"|");
+        }
+        binding.contentGame.lblDevelopersView.setText("Developers: ");
+        for ( String d : viewGame.getDevelopers() ) {
+            binding.contentGame.lblDevelopersView.append(d+" ");
+        }
+        binding.contentGame.lblPublishersView.setText("Publishers: ");
+        for ( String p : viewGame.getPublishers() ) {
+            binding.contentGame.lblPublishersView.append(p+" ");
+        }
     }
 
     @Override
