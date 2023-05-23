@@ -78,6 +78,7 @@
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardGameView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cardCornerRadius="10dp"
@@ -126,6 +127,7 @@
                         android:id="@+id/lblScoreComment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#00B4BF"
                         android:text="5"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
@@ -142,6 +144,11 @@
                         android:textSize="20sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commentsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>

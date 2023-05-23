@@ -1,6 +1,7 @@
 package com.movcat.movcatalog;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.movcat.movcatalog.adapters.GameViewAdapter;
 import com.movcat.movcatalog.config.Constants;
 import com.movcat.movcatalog.databinding.ActivityGameViewBinding;
 import com.movcat.movcatalog.models.Date;
@@ -28,12 +32,17 @@ import com.movcat.movcatalog.models.TempUser;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameViewActivity extends AppCompatActivity {
     private ActivityGameViewBinding binding;
     private String username;
     private int score;
     private Game viewGame;
+    private List<GameComment> commentsList;
+    private GameViewAdapter adapter;
+    private RecyclerView.LayoutManager lm;
     private FirebaseDatabase database;
     private DatabaseReference refGame;
     private DatabaseReference refUser;
@@ -48,13 +57,20 @@ public class GameViewActivity extends AppCompatActivity {
 
         score = 5;
         String gameId = getIntent().getStringExtra(Constants.gameKey);
+        commentsList = new ArrayList<>();
 
         if (gameId != null) {
             database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
             refGame = database.getReference("games").child(gameId);
             refUser = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            adapter = new GameViewAdapter(commentsList, R.layout.comment_view_holder, this);
+            int columnas;
+            columnas = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 1 : 2;
+            lm = new GridLayoutManager(GameViewActivity.this, columnas);
             prepareFirebaseListeners();
             prepareComponentsListeners();
+            binding.contentGame.commentsContainer.setAdapter(adapter);
+            binding.contentGame.commentsContainer.setLayoutManager(lm);
         }
     }
 
@@ -66,6 +82,10 @@ public class GameViewActivity extends AppCompatActivity {
                 viewGame = null;
                 if (snapshot.exists()) {
                     viewGame = snapshot.getValue(Game.class);
+                    if (viewGame != null && viewGame.getComments() != null) {
+                        commentsList.addAll(viewGame.getComments());
+                    }
+                    adapter.notifyDataSetChanged();
                     updateInfo();
                 }
             }
@@ -138,7 +158,7 @@ public class GameViewActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void updateInfo() {
         binding.contentGame.lblNameView.setText(viewGame.getName());
         Picasso.get()
@@ -157,6 +177,15 @@ public class GameViewActivity extends AppCompatActivity {
         binding.contentGame.lblPublishersView.setText("Publishers: ");
         for ( String p : viewGame.getPublishers() ) {
             binding.contentGame.lblPublishersView.append(p+" ");
+        }
+
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        for ( GameComment c : commentsList ) {
+            if (c.getUserUid().equals(userUid)) {
+                binding.contentGame.cardGameView.setVisibility(View.GONE);
+                commentsList.remove(c);
+                commentsList.add(0, c);
+            }
         }
     }
 

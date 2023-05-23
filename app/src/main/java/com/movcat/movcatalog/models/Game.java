@@ -1,6 +1,7 @@
 package com.movcat.movcatalog.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game implements Serializable {
@@ -19,6 +20,7 @@ public class Game implements Serializable {
 	private List<GameComment> gameComments;
 
 	public Game() {
+		gameComments = new ArrayList<>();
 	}
 
 	public Game(String id, String name, String icon, String banner, List<String> images, float price, List<String> developers, List<String> publishers, List<String> genres, List<String> consoles, Date releaseDate, Date postDate, List<GameComment> gameComments) {
