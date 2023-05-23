@@ -24,6 +24,18 @@
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/lblUsernameCommentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="6dp"
+            android:text="*Username*"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
             android:id="@+id/lblCommentCommentView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +43,7 @@
             android:paddingTop="6dp"
             android:paddingRight="10dp"
             android:paddingBottom="6dp"
-            android:text="Write your comment"
+            android:text="*Comment*"
             android:textColor="#9DC1E1"
             android:textSize="20sp" />
 

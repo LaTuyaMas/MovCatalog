@@ -37,6 +37,7 @@ public class GameViewAdapter extends RecyclerView.Adapter<GameViewAdapter.GameVH
         GameComment comment = objects.get(position);
         holder.lblScore.setText(String.valueOf(comment.getScore()));
         holder.lblComment.setText(comment.getComment());
+        holder.lblUsername.setText(comment.getUserName());
     }
 
     @Override
@@ -46,12 +47,14 @@ public class GameViewAdapter extends RecyclerView.Adapter<GameViewAdapter.GameVH
 
     public static class GameVH extends RecyclerView.ViewHolder {
         TextView lblScore;
+        TextView lblUsername;
         TextView lblComment;
 
         public GameVH(@NonNull View itemView) {
             super(itemView);
 
             lblScore = itemView.findViewById(R.id.lblScoreCommentView);
+            lblUsername = itemView.findViewById(R.id.lblUsernameCommentView);
             lblComment = itemView.findViewById(R.id.lblCommentCommentView);
         }
     }

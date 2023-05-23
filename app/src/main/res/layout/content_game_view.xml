@@ -77,6 +77,26 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/lblScoreTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BF0063"
+                android:text="Score"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/lblScoreView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BF0063"
+                android:text="*Score*"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardGameView"
                 android:layout_width="match_parent"
@@ -139,8 +159,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:background="@drawable/rounder_button"
-                        android:backgroundTint="#A30000"
+                        android:backgroundTint="#870085"
                         android:text="Send"
+                        android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

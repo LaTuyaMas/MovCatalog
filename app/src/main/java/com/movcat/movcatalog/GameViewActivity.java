@@ -178,6 +178,7 @@ public class GameViewActivity extends AppCompatActivity {
         for ( String p : viewGame.getPublishers() ) {
             binding.contentGame.lblPublishersView.append(p+" ");
         }
+        binding.contentGame.lblScoreView.setText(String.valueOf(getUltimateScore()));
 
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         for ( GameComment c : commentsList ) {
@@ -187,6 +188,14 @@ public class GameViewActivity extends AppCompatActivity {
                 commentsList.add(0, c);
             }
         }
+    }
+
+    private int getUltimateScore() {
+        int total = 0;
+        for ( GameComment c : commentsList ) {
+            total += c.getScore();
+        }
+        return total / commentsList.size();
     }
 
     @Override
