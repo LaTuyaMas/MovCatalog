@@ -38,13 +38,23 @@ public class Date{
 		return day;
 	}
 
+	public int compareTo(Date other) {
+		if (year != other.getYear()) {
+			return Integer.compare(other.getYear(), year);
+		}
+		if (month != other.getMonth()) {
+			return Integer.compare(other.getMonth(), month);
+		}
+		return Integer.compare(other.getDay(), day);
+	}
+
 	@Override
  	public String toString(){
-		return 
-			"Date{" + 
-			"month = '" + month + '\'' + 
-			",year = '" + year + '\'' + 
-			",day = '" + day + '\'' + 
+		return
+			"Date{" +
+			"month = '" + month + '\'' +
+			",year = '" + year + '\'' +
+			",day = '" + day + '\'' +
 			"}";
 		}
 }

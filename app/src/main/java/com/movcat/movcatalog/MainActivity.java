@@ -28,7 +28,6 @@ import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.GameComment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,10 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Game> gamesList;
     private ArrayList<Game> backupList;
     private ArrayList<Game> recentList;
+    private ArrayList<Game> highList;
     private HomeAdapter gamesAdapter;
     private HomeAdapter recentAdapter;
+    private HomeAdapter highAdapter;
     private RecyclerView.LayoutManager gamesLM;
     private RecyclerView.LayoutManager recentLM;
+    private RecyclerView.LayoutManager highLM;
     private FirebaseDatabase database;
     private DatabaseReference refGames;
 
@@ -69,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         recentLM = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.contentMain.recentContainer.setAdapter(recentAdapter);
         binding.contentMain.recentContainer.setLayoutManager(recentLM);
+
+        highList = new ArrayList<>();
+        highAdapter = new HomeAdapter(highList, R.layout.game_view_holder, this);
+        highLM = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.contentMain.highContainer.setAdapter(highAdapter);
+        binding.contentMain.highContainer.setLayoutManager(highLM);
 
         prepareFirebaseListeners();
 //        testGame3();
@@ -368,12 +376,14 @@ public class MainActivity extends AppCompatActivity {
                         Game game = gameSnapshot.getValue(Game.class);
                         backupList.add(game);
                     }
-
+                    ArrayList<Game> backup2 = new ArrayList<>(backupList);
                     gamesList.addAll(backupList);
                     recentList.addAll(sortByMostRecent(backupList));
+                    highList.addAll(sortByScore(backup2));
                 }
                 gamesAdapter.notifyDataSetChanged();
                 recentAdapter.notifyDataSetChanged();
+                highAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -384,30 +394,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<Game> sortByMostRecent(ArrayList<Game> gamesList){
-        ArrayList<Game> newList = new ArrayList<>();
-        Game recent = gamesList.get(0);
-
-        for (int i = 0; i < 10; i++) {
-            if (gamesList.size() != 0) {
-                for (Game g : gamesList) {
-                    if (g.getReleaseDate().getYear() >= recent.getReleaseDate().getYear()){
-                        if (g.getReleaseDate().getMonth() >= recent.getReleaseDate().getMonth()){
-                            if (g.getReleaseDate().getDay() >= recent.getReleaseDate().getDay()){
-                                recent = g;
-                            }
-                        }
-                    }
-                }
-                newList.add(recent);
-                gamesList.remove(recent);
-                recent.setReleaseDate(new Date(0, 0, 0));
+        gamesList.sort(new Comparator<Game>() {
+            @Override
+            public int compare(Game obj1, Game obj2) {
+                return obj1.getReleaseDate().compareTo(obj2.getReleaseDate());
             }
-            else {
-                return newList;
-            }
-        }
+        });
 
-        return newList;
+        return gamesList;
     }
 
     private ArrayList<Game> sortByScore(ArrayList<Game> gamesList){
