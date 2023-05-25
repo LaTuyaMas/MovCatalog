@@ -28,6 +28,9 @@ import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.GameComment;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         binding.contentMain.recentContainer.setLayoutManager(recentLM);
 
         prepareFirebaseListeners();
-//        testGame4();
+//        testGame3();
     }
 
     private void testGame() {
@@ -365,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
                         Game game = gameSnapshot.getValue(Game.class);
                         backupList.add(game);
                     }
+
                     gamesList.addAll(backupList);
                     recentList.addAll(sortByMostRecent(backupList));
                 }
@@ -404,6 +408,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return newList;
+    }
+
+    private ArrayList<Game> sortByScore(ArrayList<Game> gamesList){
+        gamesList.sort(new Comparator<Game>() {
+            @Override
+            public int compare(Game obj1, Game obj2) {
+                double avgScore1 = getAverageScore(obj1.getComments());
+                double avgScore2 = getAverageScore(obj2.getComments());
+
+                return Double.compare(avgScore2, avgScore1);
+            }
+        });
+        return gamesList;
+    }
+
+    private int getAverageScore(List<GameComment> commentList) {
+        if (commentList.isEmpty()) {
+            return 0;
+        }
+
+        int sum = 0;
+        for ( GameComment c : commentList ) {
+            sum += c.getScore();
+        }
+
+        return sum / commentList.size();
     }
 
     @Override

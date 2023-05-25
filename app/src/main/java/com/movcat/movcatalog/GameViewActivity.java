@@ -1,6 +1,7 @@
 package com.movcat.movcatalog;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ import com.movcat.movcatalog.databinding.ActivityGameViewBinding;
 import com.movcat.movcatalog.models.Date;
 import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.GameComment;
-import com.movcat.movcatalog.models.TempUser;
 import com.movcat.movcatalog.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -169,22 +169,33 @@ public class GameViewActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.contentGame.imgBannerView);
+
         for ( String t : viewGame.getGenres() ) {
-//            binding.contentGame.lblTagsView.append(t+"|");
             AppCompatButton btnTag = new AppCompatButton(this);
             btnTag.setLayoutParams(new GridLayoutManager.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             btnTag.setText(t);
+            btnTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(GameViewActivity.this, TagSearchActivity.class);
+                    intent.putExtra(Constants.tagKey, t);
+                    startActivity(intent);
+                }
+            });
             binding.contentGame.llTags.addView(btnTag);
         }
+
         binding.contentGame.lblDevelopersView.setText("Developers: ");
         for ( String d : viewGame.getDevelopers() ) {
             binding.contentGame.lblDevelopersView.append(d+" ");
         }
+
         binding.contentGame.lblPublishersView.setText("Publishers: ");
         for ( String p : viewGame.getPublishers() ) {
             binding.contentGame.lblPublishersView.append(p+" ");
         }
-        binding.contentGame.lblScoreView.setText(String.valueOf(getUltimateScore()));
+
+        binding.contentGame.lblScoreView.setText(String.valueOf(getAverageScore()));
 
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         for ( GameComment c : commentsList ) {
@@ -196,12 +207,16 @@ public class GameViewActivity extends AppCompatActivity {
         }
     }
 
-    private int getUltimateScore() {
-        int total = 0;
-        for ( GameComment c : commentsList ) {
-            total += c.getScore();
+    private int getAverageScore() {
+        if (commentsList.isEmpty()) {
+            return 0;
         }
-        return total / commentsList.size();
+
+        int sum = 0;
+        for ( GameComment c : commentsList ) {
+            sum += c.getScore();
+        }
+        return sum / commentsList.size();
     }
 
     @Override
