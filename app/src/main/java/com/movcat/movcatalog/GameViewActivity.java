@@ -1,22 +1,20 @@
 package com.movcat.movcatalog;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.movcat.movcatalog.adapters.GameViewAdapter;
+import com.movcat.movcatalog.adapters.TagsAdapter;
 import com.movcat.movcatalog.config.Constants;
 import com.movcat.movcatalog.databinding.ActivityGameViewBinding;
 import com.movcat.movcatalog.models.Date;
@@ -44,8 +43,11 @@ public class GameViewActivity extends AppCompatActivity {
     private int score;
     private Game viewGame;
     private List<GameComment> commentsList;
-    private GameViewAdapter adapter;
-    private RecyclerView.LayoutManager lm;
+    private GameViewAdapter commentsAdapter;
+    private RecyclerView.LayoutManager commentsLM;
+    private List<String> tagsList;
+    private TagsAdapter tagsAdapter;
+    private RecyclerView.LayoutManager tagsLM;
     private FirebaseDatabase database;
     private DatabaseReference refGame;
     private DatabaseReference refUser;
@@ -61,19 +63,26 @@ public class GameViewActivity extends AppCompatActivity {
         score = 5;
         String gameId = getIntent().getStringExtra(Constants.gameKey);
         commentsList = new ArrayList<>();
+        tagsList = new ArrayList<>();
 
         if (gameId != null) {
             database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
             refGame = database.getReference("games").child(gameId);
             refUser = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            adapter = new GameViewAdapter(commentsList, R.layout.comment_view_holder, this);
+
+            commentsAdapter = new GameViewAdapter(commentsList, R.layout.comment_view_holder, this);
             int columnas;
             columnas = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 1 : 2;
-            lm = new GridLayoutManager(GameViewActivity.this, columnas);
+            commentsLM = new GridLayoutManager(GameViewActivity.this, columnas);
             prepareFirebaseListeners();
             prepareComponentsListeners();
-            binding.contentGame.commentsContainer.setAdapter(adapter);
-            binding.contentGame.commentsContainer.setLayoutManager(lm);
+            binding.contentGame.commentsContainer.setAdapter(commentsAdapter);
+            binding.contentGame.commentsContainer.setLayoutManager(commentsLM);
+
+            tagsAdapter = new TagsAdapter(tagsList, R.layout.tag_button_view_holder, this);
+            tagsLM = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            binding.contentGame.tagsContainer.setAdapter(tagsAdapter);
+            binding.contentGame.tagsContainer.setLayoutManager(tagsLM);
         }
     }
 
@@ -87,8 +96,10 @@ public class GameViewActivity extends AppCompatActivity {
                     viewGame = snapshot.getValue(Game.class);
                     if (viewGame != null && viewGame.getComments() != null) {
                         commentsList.addAll(viewGame.getComments());
+                        tagsList.addAll(viewGame.getGenres());
                     }
-                    adapter.notifyDataSetChanged();
+                    commentsAdapter.notifyDataSetChanged();
+                    tagsAdapter.notifyDataSetChanged();
                     updateInfo();
                 }
             }
@@ -169,21 +180,6 @@ public class GameViewActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.contentGame.imgBannerView);
-
-        for ( String t : viewGame.getGenres() ) {
-            AppCompatButton btnTag = new AppCompatButton(this);
-            btnTag.setLayoutParams(new GridLayoutManager.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            btnTag.setText(t);
-            btnTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(GameViewActivity.this, TagSearchActivity.class);
-                    intent.putExtra(Constants.tagKey, t);
-                    startActivity(intent);
-                }
-            });
-            binding.contentGame.llTags.addView(btnTag);
-        }
 
         binding.contentGame.lblDevelopersView.setText("Developers: ");
         for ( String d : viewGame.getDevelopers() ) {
