@@ -33,17 +33,12 @@
                 android:layout_height="230dp"
                 app:srcCompat="@drawable/ic_launcher_foreground" />
 
-            <TextView
-                android:id="@+id/lblTagsView"
+            <LinearLayout
+                android:id="@+id/llTags"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="#09018A"
-                android:fontFamily="@font/k2d_extrabold"
-                android:text="*Tags*"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

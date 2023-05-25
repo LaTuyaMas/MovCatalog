@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         binding.contentMain.recentContainer.setLayoutManager(recentLM);
 
         prepareFirebaseListeners();
+//        testGame4();
     }
 
     private void testGame() {
@@ -308,38 +309,31 @@ public class MainActivity extends AppCompatActivity {
     }
     private void testGame4(){
         Game game3 = new Game();
-        game3.setName("Terraria");
-        game3.setIcon("https://play-lh.googleusercontent.com/BoAvMI_6JGNRBp_3gFaVuLuqW_4J-rjtbR_giKFoJRvZmDiPtDlnLMur9cT7sTTfeos=w240-h480-rw");
-        game3.setBanner("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/H2x1_NSwitchDS_Terraria.jpg");
+        game3.setName("Pizza Tower");
+        game3.setIcon("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/73206bd9-257c-4f50-b1f3-59a306e24084/dfnrv7j-8aed9d86-e84d-4e0e-9c77-26d94f6f98df.png/v1/fill/w_512,h_512/pizza_tower_icon_ico_by_hatemtiger_dfnrv7j-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvNzMyMDZiZDktMjU3Yy00ZjUwLWIxZjMtNTlhMzA2ZTI0MDg0XC9kZm5ydjdqLThhZWQ5ZDg2LWU4NGQtNGUwZS05Yzc3LTI2ZDk0ZjZmOThkZi5wbmciLCJ3aWR0aCI6Ijw9NTEyIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.8DplPVGlf8F0bo5fm1O4ytbVp--adoWDWLi2xQTKnpc");
+        game3.setBanner("https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/header.jpg?t=1674756021");
         ArrayList<String> images3 = new ArrayList<>();
-        images3.add("https://web54.pro/wp-content/uploads/2022/12/Obnovlenie-Terraria-145-priostanovleno-tak-kak-razrabotchiki-vzyali-mesyachnyj-pereryv.jpg");
-        images3.add("https://cdn.mos.cms.futurecdn.net/ftCURjzcqaaxNdsfUVLiDj.jpg");
-        images3.add("https://techraptor.net/sites/default/files/styles/image_header/public/2022-04/Terraria%201.4.3%20Update%20Console%20Mobile%20cover.jpg?itok=rMX8KENh");
+        images3.add("https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_3e70c43ffd6f492f6e4dce7965499d41fad47052.600x338.jpg?t=1674756021");
+        images3.add("https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_367286326c9a6ba91d4b2f08d0ca5fd1a47f2455.116x65.jpg?t=1674756021");
+        images3.add("https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_b1a38d0541d2428c9864e30071625cb5472c32da.116x65.jpg?t=1674756021");
         game3.setImages(images3);
-        game3.setPrice((float) 9.99);
+        game3.setPrice((float) 19.50);
         ArrayList<String> dev3 = new ArrayList<>();
-        dev3.add("Re-Logic");
+        dev3.add("Tour De Pizza");
         game3.setDevelopers(dev3);
         ArrayList<String> pub3 = new ArrayList<>();
-        pub3.add("Re-Logic");
+        pub3.add("Tour De Pizza");
         game3.setPublishers(pub3);
         ArrayList<String> gen3 = new ArrayList<>();
-        gen3.add("Survival");
-        gen3.add("Sandbox");
-        gen3.add("Action");
-        gen3.add("Exploration");
-        gen3.add("Multiplayer");
+        gen3.add("2D Platformer");
+        gen3.add("Fast-Paced");
+        gen3.add("Retro");
+        gen3.add("Singleplayer");
         game3.setGenres(gen3);
         ArrayList<String> con3 = new ArrayList<>();
         con3.add("PC");
-        con3.add("Xbox");
-        con3.add("PS4");
-        con3.add("Nintendo Switch");
-        con3.add("Android");
-        con3.add("IOS");
-        con3.add("PSVita");
         game3.setConsoles(con3);
-        Date release3 = new Date(16,5,2011);
+        Date release3 = new Date(26,1,2023);
         game3.setReleaseDate(release3);
         Date post3 = new Date(5,4,2023);
         game3.setPostDate(post3);

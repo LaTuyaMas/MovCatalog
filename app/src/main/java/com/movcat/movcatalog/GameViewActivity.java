@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +31,7 @@ import com.movcat.movcatalog.models.Date;
 import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.GameComment;
 import com.movcat.movcatalog.models.TempUser;
+import com.movcat.movcatalog.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
@@ -101,7 +104,7 @@ public class GameViewActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 username = "";
                 if (snapshot.exists()) {
-                    TempUser user = snapshot.getValue(TempUser.class);
+                    User user = snapshot.getValue(User.class);
                     username = user.getNickname();
                 }
             }
@@ -166,9 +169,12 @@ public class GameViewActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_background)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(binding.contentGame.imgBannerView);
-        binding.contentGame.lblTagsView.setText("");
         for ( String t : viewGame.getGenres() ) {
-            binding.contentGame.lblTagsView.append(t+"|");
+//            binding.contentGame.lblTagsView.append(t+"|");
+            AppCompatButton btnTag = new AppCompatButton(this);
+            btnTag.setLayoutParams(new GridLayoutManager.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            btnTag.setText(t);
+            binding.contentGame.llTags.addView(btnTag);
         }
         binding.contentGame.lblDevelopersView.setText("Developers: ");
         for ( String d : viewGame.getDevelopers() ) {
