@@ -34,8 +34,10 @@ import com.movcat.movcatalog.models.User;
 import com.movcat.movcatalog.models.UserComment;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class GameViewActivity extends AppCompatActivity {
     private int score;
     private Game viewGame;
     private User currentUser;
+    private NumberFormat priceFormat;
     private List<GameComment> commentsList;
     private GameViewAdapter commentsAdapter;
     private RecyclerView.LayoutManager commentsLM;
@@ -66,6 +69,9 @@ public class GameViewActivity extends AppCompatActivity {
         String gameId = getIntent().getStringExtra(Constants.gameKey);
         commentsList = new ArrayList<>();
         tagsList = new ArrayList<>();
+        priceFormat = NumberFormat.getCurrencyInstance();
+        priceFormat.setCurrency(Currency.getInstance("EUR")); // Set currency symbol (e.g., USD)
+        priceFormat.setMaximumFractionDigits(2);
 
         if (gameId != null) {
             database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -202,6 +208,11 @@ public class GameViewActivity extends AppCompatActivity {
         for ( String p : viewGame.getPublishers() ) {
             binding.contentGame.lblPublishersView.append(p+" ");
         }
+
+        binding.contentGame.lblDateView.setText(viewGame.getReleaseDate().getDay()+"/"+viewGame.getReleaseDate().getMonth()+"/"+viewGame.getReleaseDate().getYear());
+
+        String formattedPrice = priceFormat.format(viewGame.getPrice());
+        binding.contentGame.lblPriceView.setText(formattedPrice);
 
         binding.contentGame.lblScoreView.setText(String.valueOf(getAverageScore()));
 

@@ -142,7 +142,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         TextView mensaje = new TextView(MyProfileActivity.this);
-        mensaje.setText("ARE YOU SURE YOU WANT TO DELETE YUOR ACCOUNT?");
+        mensaje.setText("ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?");
         mensaje.setTextSize(20);
         mensaje.setTextColor(Color.RED);
         mensaje.setPadding(50,100,50,100);

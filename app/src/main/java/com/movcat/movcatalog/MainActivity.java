@@ -371,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 gamesList.clear();
                 recentList.clear();
+                highList.clear();
                 if (snapshot.exists()) {
                     for ( DataSnapshot gameSnapshot : snapshot.getChildren() ) {
                         Game game = gameSnapshot.getValue(Game.class);
