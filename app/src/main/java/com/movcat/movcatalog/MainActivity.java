@@ -501,6 +501,10 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        if (id == R.id.tags){
+            startActivity(new Intent(MainActivity.this, TagSearchActivity.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

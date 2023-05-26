@@ -4,7 +4,7 @@
     tools:context="com.movcat.movcatalog.MainActivity">
     <item
         android:id="@+id/back"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/ic_baseline_arrow_forward_34"
         android:title="Back"
         app:showAsAction="always" />
 </menu>
