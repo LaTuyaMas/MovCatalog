@@ -43,8 +43,10 @@ public class MyProfileActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager commentsLM;
     private FirebaseDatabase database;
     private DatabaseReference refUser;
+    private DatabaseReference refUsersList;
     private DatabaseReference refGames;
     private List<Game> gamesList;
+    private List<User> usersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,10 @@ public class MyProfileActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
         refUser = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        refUser = database.getReference("users");
         refGames = database.getReference("games");
 
+        usersList = new ArrayList<>();
         gamesList = new ArrayList<>();
         commentsList = new ArrayList<>();
         commentsAdapter = new UserCommentAdapter(commentsList, R.layout.user_comment_view_holder, this, gamesList);
@@ -112,6 +116,24 @@ public class MyProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        refUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usersList.clear();
+                if (snapshot.exists()) {
+                    for ( DataSnapshot userSnapshot : snapshot.getChildren() ) {
+                        User user = userSnapshot.getValue(User.class);
+                        usersList.add(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void prepareComponentsListeners() {
@@ -119,11 +141,21 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String newName = binding.contentProfile.txtNicknameProfile.getText().toString();
+                boolean goodName = true;
+
+                for ( User u : usersList ) {
+                    if (u.getNickname().equals(newName)){
+                        goodName = false;
+                        Toast.makeText(MyProfileActivity.this, "That nickname is already used", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 if (newName.isEmpty()) {
+                    goodName = false;
                     Toast.makeText(MyProfileActivity.this, "Field is empty", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    confirmNickname(newName).show();
+
+                if (goodName) {
+                    confirmNickname(newName);
                 }
             }
         });
@@ -142,7 +174,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         TextView mensaje = new TextView(MyProfileActivity.this);
-        mensaje.setText("Are you sure you want to change your nickname?");
+        mensaje.setText("Are you ok with "+newName+" as your nickname?");
         mensaje.setTextSize(20);
         mensaje.setTextColor(Color.BLACK);
         mensaje.setPadding(50,100,50,100);
