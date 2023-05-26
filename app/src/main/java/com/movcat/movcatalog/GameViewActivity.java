@@ -216,8 +216,11 @@ public class GameViewActivity extends AppCompatActivity {
 
         binding.contentGame.lblScoreView.setText(String.valueOf(getAverageScore()));
 
-        //Este arreglo esta totalmento hecho por ChatGPT porque no tenía ni idea como hacer
-        //que no diera una excepción cuando necesito mirar los comentarios al actualizar la página
+        binding.contentGame.lblConsolesView.setText("");
+        for ( String c : viewGame.getConsoles()) {
+            binding.contentGame.lblConsolesView.append("<"+c+">");
+        }
+
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Iterator<GameComment> iterator = commentsList.iterator();
         while (iterator.hasNext()) {

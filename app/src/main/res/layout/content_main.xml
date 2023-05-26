@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:background="#1D0043"
                 android:fontFamily="@font/k2d_extrabold"
-                android:text="MOST RECENT REVIEWS"
+                android:text="MOST RECENT ENTRIES"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp" />

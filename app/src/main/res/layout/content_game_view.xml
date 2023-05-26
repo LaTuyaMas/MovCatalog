@@ -106,20 +106,36 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/lblConsolesView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#1D0043"
+                android:fontFamily="@font/k2d_extrabold"
+                android:text="*Consoles*"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/lblScoreTitleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#BF0063"
+                android:fontFamily="@font/k2d_extrabold"
                 android:text="Score"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/lblScoreView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#BF0063"
+                android:fontFamily="@font/k2d_extrabold"
                 android:text="*Score*"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
