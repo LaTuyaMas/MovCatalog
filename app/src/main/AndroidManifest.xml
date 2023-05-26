@@ -14,6 +14,11 @@
         android:theme="@style/Theme.MovCatalog"
         tools:targetApi="31">
         <activity
+            android:name=".MyProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_my_profile"
+            android:theme="@style/Theme.MovCatalog.NoActionBar" />
+        <activity
             android:name=".TagSearchActivity"
             android:exported="false"
             android:label="@string/title_activity_tag_search"

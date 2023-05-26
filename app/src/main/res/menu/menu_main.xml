@@ -22,6 +22,11 @@
                 android:title="Tags"
                 app:showAsAction="ifRoom" />
             <item
+                android:id="@+id/myprofile"
+                android:icon="@drawable/ic_baseline_person_34"
+                android:title="MyProfile"
+                app:showAsAction="ifRoom" />
+            <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_baseline_logout_34"
                 android:title="Logout"

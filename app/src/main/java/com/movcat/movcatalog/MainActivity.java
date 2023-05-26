@@ -513,6 +513,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, TagSearchActivity.class));
         }
 
+        if (id == R.id.myprofile){
+            startActivity(new Intent(MainActivity.this, MyProfileActivity.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

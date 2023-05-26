@@ -8,13 +8,14 @@
     app:cardUseCompatPadding="true">
 
     <LinearLayout
+        android:id="@+id/llUserComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#003C73"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/lblScoreCommentView"
+            android:id="@+id/lblScoreUserComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FF00B4BF"
@@ -24,19 +25,32 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/lblUsernameCommentView"
+            android:id="@+id/lblGameUserComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
             android:paddingTop="6dp"
             android:paddingRight="10dp"
             android:paddingBottom="6dp"
-            android:text="*Username*"
+            android:text="*Game*"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/lblCommentCommentView"
+            android:id="@+id/lblDateUserComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="6dp"
+            android:text="*Date*"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/lblCommentUserComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -46,19 +60,5 @@
             android:text="*Comment*"
             android:textColor="#9DC1E1"
             android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/lblDateCommentView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingTop="6dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="6dp"
-            android:text="*Date*"
-            android:textAlignment="viewEnd"
-            android:textColor="#9DC1E1"
-            android:textSize="15sp" />
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>
