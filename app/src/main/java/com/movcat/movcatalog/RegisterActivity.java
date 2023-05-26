@@ -85,11 +85,14 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
-                if (!email.isEmpty() && password.length() > 5 && goodRegister){
-                    doRegister(email, password);
+                if (password.length() < 5) {
+                    Toast.makeText(RegisterActivity.this, "Password must be 6 characters long minimum", Toast.LENGTH_SHORT).show();
+                }
+                else if (!goodRegister) {
+                    Toast.makeText(RegisterActivity.this, "Please revise email", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(RegisterActivity.this, "Please revise email and password", Toast.LENGTH_SHORT).show();
+                    doRegister(email, password);
                 }
             }
         });
