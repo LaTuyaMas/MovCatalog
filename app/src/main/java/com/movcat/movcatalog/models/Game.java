@@ -126,9 +126,7 @@ public class Game implements Serializable {
 		return id;
 	}
 
-	public void addComment(GameComment comment) {
-		gameComments.add(0, comment);
-	}
+	public void addComment(GameComment comment) { gameComments.add(0, comment); }
 
 	@Override
  	public String toString(){

@@ -31,17 +31,19 @@ import com.movcat.movcatalog.models.Date;
 import com.movcat.movcatalog.models.Game;
 import com.movcat.movcatalog.models.GameComment;
 import com.movcat.movcatalog.models.User;
+import com.movcat.movcatalog.models.UserComment;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GameViewActivity extends AppCompatActivity {
     private ActivityGameViewBinding binding;
-    private String username;
     private int score;
     private Game viewGame;
+    private User currentUser;
     private List<GameComment> commentsList;
     private GameViewAdapter commentsAdapter;
     private RecyclerView.LayoutManager commentsLM;
@@ -92,6 +94,8 @@ public class GameViewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 viewGame = null;
+                commentsList.clear();
+                tagsList.clear();
                 if (snapshot.exists()) {
                     viewGame = snapshot.getValue(Game.class);
                     if (viewGame != null && viewGame.getComments() != null) {
@@ -113,10 +117,9 @@ public class GameViewActivity extends AppCompatActivity {
         refUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                username = "";
+                currentUser = null;
                 if (snapshot.exists()) {
-                    User user = snapshot.getValue(User.class);
-                    username = user.getNickname();
+                    currentUser = snapshot.getValue(User.class);
                 }
             }
 
@@ -160,13 +163,22 @@ public class GameViewActivity extends AppCompatActivity {
                     GameComment gcomment = new GameComment(
                             date,
                             score,
-                            username,
+                            currentUser.getNickname(),
                             comment,
                             viewGame.getId(),
-                            FirebaseAuth.getInstance().getCurrentUser().getUid()
+                            currentUser.getUser_uid()
+                    );
+                    UserComment ucomment = new UserComment(
+                            viewGame.getId(),
+                            viewGame.getName(),
+                            comment,
+                            date,
+                            score
                     );
                     viewGame.addComment(gcomment);
                     refGame.setValue(viewGame);
+                    currentUser.addComment(ucomment);
+                    refUser.setValue(currentUser);
                 }
             }
         });
@@ -193,12 +205,17 @@ public class GameViewActivity extends AppCompatActivity {
 
         binding.contentGame.lblScoreView.setText(String.valueOf(getAverageScore()));
 
+        //Este arreglo esta totalmento hecho por ChatGPT porque no tenía ni idea como hacer
+        //que no diera una excepción cuando necesito mirar los comentarios al actualizar la página
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        for ( GameComment c : commentsList ) {
-            if (c.getUserUid().equals(userUid)) {
+        Iterator<GameComment> iterator = commentsList.iterator();
+        while (iterator.hasNext()) {
+            GameComment comment = iterator.next();
+            if (comment.getUserUid().equals(userUid)) {
                 binding.contentGame.cardGameView.setVisibility(View.GONE);
-                commentsList.remove(c);
-                commentsList.add(0, c);
+                iterator.remove();
+                commentsList.add(0, comment);
+                break;
             }
         }
     }
