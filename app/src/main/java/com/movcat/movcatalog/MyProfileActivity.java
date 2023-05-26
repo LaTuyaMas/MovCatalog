@@ -58,7 +58,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance("https://movcatalog-9d20f-default-rtdb.europe-west1.firebasedatabase.app/");
         refUser = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        refUser = database.getReference("users");
+        refUsersList = database.getReference("users");
         refGames = database.getReference("games");
 
         usersList = new ArrayList<>();
@@ -117,7 +117,7 @@ public class MyProfileActivity extends AppCompatActivity {
             }
         });
 
-        refUser.addValueEventListener(new ValueEventListener() {
+        refUsersList.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersList.clear();
