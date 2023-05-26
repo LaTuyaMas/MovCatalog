@@ -442,54 +442,62 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (s.equals("back") && backupList.size() != 0){
-                    binding.contentMain.lblRecentHome.setVisibility(View.VISIBLE);
-                    binding.contentMain.recentContainer.setVisibility(View.VISIBLE);
-                    binding.contentMain.lblHighHome.setVisibility(View.VISIBLE);
-                    binding.contentMain.highContainer.setVisibility(View.VISIBLE);
-                    binding.contentMain.lblAllGamesHome.setText("THE ENTIRE LIST");
-
-                    gamesList.clear();
-                    gamesList.addAll(backupList);
-                    backupList.clear();
-                    gamesAdapter.notifyDataSetChanged();
-                }
-                else {
-                    binding.contentMain.lblRecentHome.setVisibility(View.GONE);
-                    binding.contentMain.recentContainer.setVisibility(View.GONE);
-                    binding.contentMain.lblHighHome.setVisibility(View.GONE);
-                    binding.contentMain.highContainer.setVisibility(View.GONE);
-                    binding.contentMain.lblAllGamesHome.setText("SEARCH RESULTS");
-
-                    if (backupList.size() == 0) {
-                        backupList.addAll(gamesList);
-                    }
-                    else {
-                        gamesList.clear();
-                        gamesList.addAll(backupList);
-                    }
-                    ArrayList<Game> filteredGames = new ArrayList<>();
-                    for ( Game g : gamesList ) {
-                        if (g.getName().equalsIgnoreCase(s)) {
-                            filteredGames.add(g);
-                        }
-                    }
-                    gamesList.clear();
-                    gamesList.addAll(filteredGames);
-                    gamesAdapter.notifyDataSetChanged();
-                }
-                searchView.clearFocus();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                filterGameBySearch(s);
+                return true;
             }
         });
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    private void filterGameBySearch(String query) {
+        if (query.isEmpty() && backupList.size() != 0) {
+            binding.contentMain.lblRecentHome.setVisibility(View.VISIBLE);
+            binding.contentMain.recentContainer.setVisibility(View.VISIBLE);
+            binding.contentMain.lblHighHome.setVisibility(View.VISIBLE);
+            binding.contentMain.highContainer.setVisibility(View.VISIBLE);
+            binding.contentMain.lblAllGamesHome.setText("THE ENTIRE LIST");
+
+            gamesList.clear();
+            gamesList.addAll(backupList);
+            backupList.clear();
+            gamesAdapter.notifyDataSetChanged();
+        }
+        else {
+            binding.contentMain.lblRecentHome.setVisibility(View.GONE);
+            binding.contentMain.recentContainer.setVisibility(View.GONE);
+            binding.contentMain.lblHighHome.setVisibility(View.GONE);
+            binding.contentMain.highContainer.setVisibility(View.GONE);
+            binding.contentMain.lblAllGamesHome.setText("SEARCH RESULTS");
+
+            if (backupList.size() == 0) {
+                backupList.addAll(gamesList);
+                gamesList.clear();
+            }
+            else {
+                gamesList.clear();
+                gamesList.addAll(backupList);
+            }
+
+            ArrayList<Game> filteredList = new ArrayList<>();
+            for (Game g : gamesList) {
+                if (g.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(g);
+                }
+            }
+
+            gamesList.clear();
+            gamesList.addAll(filteredList);
+            gamesAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
