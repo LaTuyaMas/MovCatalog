@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +37,7 @@ public class TagSearchActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager tagsLM;
     private ArrayList<Game> gamesList;
     private ArrayList<Game> backupList;
+    private ArrayList<Game> backupList2;
     private HomeAdapter gamesAdapter;
     private RecyclerView.LayoutManager gamesLM;
     private FirebaseDatabase database;
@@ -64,6 +66,7 @@ public class TagSearchActivity extends AppCompatActivity {
 
         gamesList = new ArrayList<>();
         backupList = new ArrayList<>();
+        backupList2 = new ArrayList<>();
         gamesAdapter = new HomeAdapter(gamesList, R.layout.game_view_holder, this);
         int columnas2;
         columnas2 = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
@@ -173,8 +176,59 @@ public class TagSearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_game, menu);
+        getMenuInflater().inflate(R.menu.menu_tag, menu);
+
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("Type back to return to normal");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterGameBySearch(s);
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    private void filterGameBySearch(String query) {
+        if (query.isEmpty() && backupList2.size() != 0) {
+            gamesList.clear();
+            gamesList.addAll(backupList2);
+            backupList2.clear();
+            gamesAdapter.notifyDataSetChanged();
+        }
+        else {
+
+            if (backupList2.size() == 0) {
+                backupList2.addAll(gamesList);
+                gamesList.clear();
+            }
+            else {
+                gamesList.clear();
+                gamesList.addAll(backupList2);
+            }
+
+            ArrayList<Game> filteredList = new ArrayList<>();
+            for (Game g : gamesList) {
+                if (g.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(g);
+                }
+            }
+
+            gamesList.clear();
+            gamesList.addAll(filteredList);
+            gamesAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

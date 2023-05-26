@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.movcat.movcatalog.MainActivity">
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_baseline_search_34"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/back"
+        android:icon="@drawable/ic_baseline_arrow_forward_34"
+        android:title="Back"
+        app:showAsAction="always" />
+</menu>
