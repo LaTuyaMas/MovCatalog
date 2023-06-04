@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!backupList.isEmpty()) {
+                    backupList.clear();
+                }
                 gamesList.clear();
                 recentList.clear();
                 highList.clear();

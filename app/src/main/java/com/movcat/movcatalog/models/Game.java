@@ -128,6 +128,8 @@ public class Game implements Serializable {
 
 	public void addComment(GameComment comment) { gameComments.add(0, comment); }
 
+	public void removeComment(GameComment comment) { gameComments.remove(comment); }
+
 	@Override
  	public String toString(){
 		return 

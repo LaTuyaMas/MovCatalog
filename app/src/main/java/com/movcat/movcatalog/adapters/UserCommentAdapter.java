@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.movcat.movcatalog.GameViewActivity;
 import com.movcat.movcatalog.R;
 import com.movcat.movcatalog.config.Constants;
@@ -30,12 +32,15 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
     private final int resources;
     private final Context context;
     private final List<Game> safeDelete;
+    private DatabaseReference deleteContext;
+    private FirebaseDatabase database;
 
-    public UserCommentAdapter(List<UserComment> objects, int resources, Context context, List<Game> safeDelete) {
+    public UserCommentAdapter(List<UserComment> objects, int resources, Context context, List<Game> safeDelete, FirebaseDatabase database) {
         this.objects = objects;
         this.resources = resources;
         this.context = context;
         this.safeDelete = safeDelete;
+        this.database = database;
     }
 
     @NonNull
@@ -52,6 +57,8 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
         holder.lblGame.setText(comment.getGame_name());
         holder.lblDate.setText(comment.getDate().getDay()+"/"+comment.getDate().getMonth()+"/"+comment.getDate().getYear());
         holder.lblComment.setText(comment.getComment());
+
+        deleteContext = database.getReference("games").child(comment.getGame_id());
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,11 +123,12 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
                     if ( g.getComments() != null) {
                         for ( GameComment c : g.getComments() ) {
                             if (c.getGameId().equals(comment.getGame_id())){
-                                safeDelete.remove(c);
+                                g.removeComment(c);
                             }
                         }
                     }
                 }
+//                deleteContext.setValue(safeDelete);
                 objects.remove(comment);
                 notifyDataSetChanged();
             }

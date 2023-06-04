@@ -64,7 +64,7 @@ public class MyProfileActivity extends AppCompatActivity {
         usersList = new ArrayList<>();
         gamesList = new ArrayList<>();
         commentsList = new ArrayList<>();
-        commentsAdapter = new UserCommentAdapter(commentsList, R.layout.user_comment_view_holder, this, gamesList);
+        commentsAdapter = new UserCommentAdapter(commentsList, R.layout.user_comment_view_holder, this, gamesList, database);
         int columnas;
         columnas = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 1 : 2;
         commentsLM = new GridLayoutManager(MyProfileActivity.this, columnas);
